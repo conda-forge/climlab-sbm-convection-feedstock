@@ -1,5 +1,5 @@
 {% set name = "climlab-sbm-convection" %}
-{% set version = "0.1" %}
+{% set version = "0.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/climlab/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 0852a75dbe8c486a302efb02cf56b776863d48fd446f498702e46a0ea7e9dc90
+  sha256: 9ab1828fce993fc6a1de4a3d56ea6d4743fab6ac0837f46650921f1adbd7f4b9
 
 build:
   script: {{ PYTHON }} -m pip install . -vv
