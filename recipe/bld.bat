@@ -1,6 +1,6 @@
 mkdir builddir
 
-%PYTHON% -m meson setup %MESON_ARGS% builddir
+meson setup %MESON_ARGS% builddir
 if errorlevel 1 (
     type builddir\meson-logs\meson-log.txt
     exit /b 1
