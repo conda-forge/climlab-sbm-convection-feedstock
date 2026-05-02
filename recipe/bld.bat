@@ -1,9 +1,12 @@
-:: Derive flang's lib directory from the Fortran compiler path (FC).
-:: BUILD_PREFIX is not reliably set in conda-build native Windows builds,
-:: but FC always points to flang.exe in Library\bin\, so lib is the sibling dir.
-for %%i in ("%FC%") do set "FC_BIN=%%~dpi"
-for %%F in ("%FC_BIN%..\lib") do set "FLANG_LIB=%%~fF"
-set "LIB=%FLANG_LIB%;%LIB%"
+:: pgmath.lib (classic flang vectorised-math runtime) is absent from the
+:: conda-forge flang package. Build a stub static library so the linker
+:: can proceed; no pgmath symbols are referenced by the compiled Fortran,
+:: so the stub is never pulled into the final .pyd.
+echo int pgmath_stub = 0; > pgmath_stub.c
+cl /nologo /c pgmath_stub.c /Fopgmath_stub.obj
+lib /nologo /out:pgmath.lib /machine:x64 pgmath_stub.obj
+del pgmath_stub.c pgmath_stub.obj
+set "LIB=.;%LIB%"
 
 %PYTHON% -m pip install . --no-build-isolation --no-deps -vv -Csetup-args=-Db_vscrt=none
 if errorlevel 1 exit /b 1
