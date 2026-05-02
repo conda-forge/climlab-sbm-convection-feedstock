@@ -1,5 +1,5 @@
 {% set name = "climlab-sbm-convection" %}
-{% set version = "0.2" %}
+{% set version = "0.2.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,18 +7,18 @@ package:
 
 source:
   url: https://github.com/climlab/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 9ab1828fce993fc6a1de4a3d56ea6d4743fab6ac0837f46650921f1adbd7f4b9
+  sha256: 4dad959e03c946ce4e4a4c7fddaae9dda4d300c48081de85cf988f82004e4d4a
 
 build:
-  skip: true  # [py<39 or win]  
-  number: 4
+  skip: true  # [py<39 or win]
+  number: 0
 
 requirements:
   build:
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - numpy                                  # [build_platform != target_platform]
-    - ninja                                  
+    - ninja
     - pkg-config
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
