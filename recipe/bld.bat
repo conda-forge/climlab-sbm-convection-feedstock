@@ -1,11 +1,12 @@
-REM Add conda-forge's flang-rt library directory to LIB so MSVC link.exe can
-REM find flang_rt.runtime.dynamic.lib if lld-link is still not used.
-set "LIB=%BUILD_PREFIX%\Library\lib;%LIB%"
+REM Diagnostic: show where (if anywhere) flang_rt files live in this environment
+echo BUILD_PREFIX: %BUILD_PREFIX%
+where lld-link 2>nul && echo lld-link found in PATH || echo lld-link NOT in PATH
+dir /s /b "%BUILD_PREFIX%\*flang_rt*" 2>nul || echo No flang_rt files found in BUILD_PREFIX
 
-REM Ensure lld-link is in PATH (it lives in Library\bin alongside flang),
-REM then declare it as the Fortran linker so meson can actually find it.
-set "PATH=%BUILD_PREFIX%\Library\bin;%PATH%"
-set "FC_LD=lld-link"
+REM MSVC link.exe reads the LINK env var for extra options directly.
+REM Suppress the /defaultlib:flang_rt.runtime.dynamic.lib directive that
+REM flang 21 embeds in compiled Fortran .obj files.
+set "LINK=/NODEFAULTLIB:flang_rt.runtime.dynamic.lib %LINK%"
 
 %PYTHON% -m pip install . --no-build-isolation --no-deps -vv -Csetup-args=-Db_vscrt=none
 if errorlevel 1 exit /b 1
