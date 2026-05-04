@@ -1,5 +1,8 @@
-REM Replicate the libpaths flang adds when it drives a link, so MSVC link.exe
-REM (invoked directly by meson for the .pyd) finds flang_rt.runtime.dynamic.lib.
+REM conda-forge ships flang_rt.runtime.static.lib but not the dynamic variant.
+REM Force static Fortran runtime, and add its directory to LIB so MSVC link.exe
+REM finds it (flang adds these paths automatically when it drives a link, but
+REM meson invokes link.exe directly for the .pyd).
+set "FFLAGS=-fms-runtime-lib=static"
 for /d %%i in ("%BUILD_PREFIX%\Library\lib\clang\*") do set "LIB=%%i\lib\windows;%LIB%"
 set "LIB=%BUILD_PREFIX%\Library\lib;%LIB%"
 
